@@ -11,9 +11,17 @@ This is a quick project to be able receive data from multiple sources (e.g. ardu
 * Run ```npm install -g typescript browserify```
 ### Minimal
 * Fill app.ini with you desired parameters
-* Run ```pip install -r requirements```
+* In the project root, run ```python3 -m pip install -r requirements```
 ### Front-End Dev
-* Run ```npm install```
+* In the project root, run ```npm install```
+
+## Run
+* In the project root, run ```python3 app.py```
+
+## Update Frontend
+The front-end scripts are written in typescript and use node_modules.
+Therefore, they need to be transpiled and linked together, the bundle_ts does these operations
+To update the bundle.js file, run ```python3 bundle_ts.py```
 
 ## Data Receiving Server
 The data server accept TCP connection at the address and port defined in app.ini
