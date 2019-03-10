@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "sourceMap": true
+  },
+  "include": [
+    "static/ts/*.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}
