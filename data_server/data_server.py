@@ -1,4 +1,3 @@
-import socket
 import struct
 import time
 from socketserver import ThreadingMixIn, TCPServer, BaseRequestHandler
@@ -33,38 +32,7 @@ class ThreadedTCPRequestHandler(BaseRequestHandler):
 
 
 class DataServer(ThreadingMixIn, TCPServer):
-    def __init__(self, server_address, request_handler_class, bind_and_activate=True, data_queue=None):
+    def __init__(self, server_address, request_handler_class,
+                 bind_and_activate=True, data_queue=None):
         TCPServer.__init__(self, server_address, request_handler_class, bind_and_activate)
         self.queue = data_queue
-
-
-def print_val(queue):
-    for i in range(3):
-        print(queue.get())
-
-
-if __name__ == '__main__':
-    HOST, PORT = "192.168.0.101", 8889
-
-
-    # data_queue = Queue()
-    # data_server = DataServer((HOST, PORT), ThreadedTCPRequestHandler, data_queue=data_queue)
-    #
-    # data_server_thread = threading.Thread(target=data_server.serve_forever)
-    # data_server_thread.start()
-
-    def client(name, value):
-        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
-            sock.connect((HOST, PORT))
-            sock.sendall(bytes([len(name), 0]) + bytes(name, 'ascii') + struct.pack("<i", value))
-
-
-    client("arduino_2", 1)
-    time.sleep(1)
-    client("arduino_1", 2)
-    time.sleep(1)
-    client("arduino_1", 3)
-    time.sleep(1)
-
-    # data_server.shutdown()
-    # print_val(data_queue)

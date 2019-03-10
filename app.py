@@ -1,4 +1,6 @@
 import atexit
+import configparser
+import socket
 from multiprocessing import Queue
 from threading import Thread
 
@@ -9,21 +11,32 @@ from data_server.data_dispatcher import DataDispatcher
 from data_server.data_server import DataServer, ThreadedTCPRequestHandler
 from data_server.rolling_data_base import RollingDataBase
 
-HOST, PORT = "192.168.0.101", 8889
+config = configparser.ConfigParser()
+config.read("app.ini")
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'ThisHasToBeChanged!'
+app.config['SECRET_KEY'] = config.get("server.graphs", "secret_key")
 socket_io = SocketIO(app)
 
-database = RollingDataBase("./db", auto_save_s=0)
+# Configuring and loading database
+database = RollingDataBase(config.get("database", "db_folder"),
+                           auto_save_s=config.getint("database", "auto_save_s"))
 database.load()
+
+# Configuring DataServer
+if config.getboolean("server.data", "auto_host"):
+    data_server_host = socket.gethostbyname(socket.gethostname())
+else:
+    data_server_host = config.getboolean("server.data", "host")
+data_server_port = config.getint("server.data", "port")
 data_queue = Queue()
-data_server = DataServer((HOST, PORT), ThreadedTCPRequestHandler, data_queue=data_queue)
+data_server = DataServer((data_server_host, data_server_port),
+                         ThreadedTCPRequestHandler,
+                         data_queue=data_queue)
 
 
 def dispatch_update(data):
-    name = data[0]
-    x_y = data[1]
+    name, x_y = data
     socket_io.emit("data_update", [name, x_y])
     database.add(name, x_y)
 
@@ -37,7 +50,7 @@ def give_initial_params():
 
 
 @app.route('/')
-def hello_world():
+def main_page():
     return render_template('index.html')
 
 
@@ -46,6 +59,7 @@ def closing_resources():
     print("Closing resources")
     data_server.shutdown()
     data_dispatcher.stop()
+    database.stop_auto_save()
     database.save()
 
 
@@ -56,4 +70,9 @@ if __name__ == '__main__':
     data_dispatcher_thread = Thread(target=data_dispatcher.run)
     data_dispatcher_thread.start()
 
-    socket_io.run(app, host=HOST, port=5000)
+    if config.getboolean("server.graphs", "auto_host"):
+        graph_server_host = socket.gethostbyname(socket.gethostname())
+    else:
+        graph_server_host = config.getboolean("server.graphs", "host")
+    graph_server_port = config.getint("server.graphs", "port")
+    socket_io.run(app, host=graph_server_host, port=graph_server_port)

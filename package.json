@@ -1,0 +1,29 @@
+{
+  "name": "webserver",
+  "version": "1.0.0",
+  "description": "This is a quick project to be able receive data from multiple sources (e.g. arduinos, rapsberry pies) connected on the same network and display in real time the graph of these data.",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "dependencies": {
+    "chart.js": "^2.7.3",
+    "express": "^4.16.4",
+    "jquery": "^3.3.1",
+    "socket.io-client": "^2.2.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sylvaus/datawebserver.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sylvaus/datawebserver/issues"
+  },
+  "homepage": "https://github.com/sylvaus/datawebserver#readme"
+}

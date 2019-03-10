@@ -76,7 +76,7 @@ class RollingDataBase:
     def _auto_save(self, auto_save_s):
         while not self._stop:
             self.save()
-            sleep(1000 * auto_save_s)
+            sleep(auto_save_s)
 
     def stop_auto_save(self):
         self._stop = True
