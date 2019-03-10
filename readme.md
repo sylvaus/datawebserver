@@ -32,5 +32,13 @@ For the moment, only two parameter types are supported:
 * 0: int (32 bits)
 * 1: float  (32 bits)
 
+### Examples
+#### Python
+The file [tests/send_value_to_data_server.py](tests/send_value_to_data_server.py) shows an example on how-to send data 
+to the data server
+#### C++
+The file [tests/send_value_to_data_server.cpp](tests/send_value_to_data_server.cpp) shows an example on how-to send data 
+to the data server
+
 ## Graph Server
 The graph server will be available at the address and port defined in app.ini
